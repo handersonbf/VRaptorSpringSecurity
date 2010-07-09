@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:sec="http://www.springframework.org/schema/security" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+          http://www.springframework.org/schema/security
+          http://www.springframework.org/schema/security/spring-security-3.0.xsd">
+
+	<sec:global-method-security secured-annotations="disabled" jsr250-annotations="enabled" />
+
+	<!-- Permite usar este alias em outros beans -->
+<!--	<sec:authentication-manager alias="authenticationManager" />-->
+
+
+	<sec:http auto-config="true" access-denied-page="/noAccess">
+		
+		<sec:form-login login-page="/login"
+			login-processing-url="/j_spring_security_check"
+			authentication-failure-url="/noAccess" 
+			default-target-url="/main"
+			always-use-default-target="true" />
+
+		<sec:intercept-url pattern="/main/**" access="IS_AUTHENTICATED_FULLY" />
+		<sec:intercept-url pattern="/user/**" access="ROLE_USER" />
+		<sec:intercept-url pattern="/admin/**" access="ROLE_ADMIN" />
+		<sec:intercept-url pattern="/login" filters="none" />
+		<sec:intercept-url pattern="/images/**" filters="none" />
+		<sec:intercept-url pattern="/css/**" filters="none" />
+		<sec:intercept-url pattern="/js/**" filters="none" />
+	</sec:http>
+
+	<sec:authentication-manager>
+		<sec:authentication-provider>
+			<sec:user-service>
+				<sec:user name="jimi" password="jimis" authorities="ROLE_ADMIN" />
+				<sec:user name="bob" password="bobs" authorities="ROLE_USER" />
+			</sec:user-service>
+		</sec:authentication-provider>
+	</sec:authentication-manager>
+
+	<!-- esse cara serve pra definir o tipo de "votação" para saber se o usuário terá acesso ou não -->
+<!--	<bean id="accessDecisionManager" class="org.springframework.security.access.vote.UnanimousBased">-->
+<!--		<property name="decisionVoters">-->
+<!--			<list>-->
+					<!-- lista de votadores (voters) -->
+<!--				<bean class="org.springframework.security.access.vote.AuthenticatedVoter" />-->
+<!--			</list>-->
+<!--		</property>-->
+<!--	</bean>-->
+
+</beans>
+  
